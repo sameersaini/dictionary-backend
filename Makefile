@@ -1,2 +1,2 @@
 local:
-	nodemon
+	node_modules/.bin/nodemon

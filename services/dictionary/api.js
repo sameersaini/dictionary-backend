@@ -5,35 +5,35 @@ let status = () => {
 };
 
 let moveToNextPage = () => {
-    return axios.get('/move-to-next-page');
+    return axios.post('/move-to-next-page');
 }
 
 let moveToPreviousPage = () => {
-    return axios.get('/move-to-previous-page');
+    return axios.post('/move-to-previous-page');
 }
 
 let jumpToFirstPage = () => {
-    return axios.get('/jump-to-first-page');
+    return axios.post('/jump-to-first-page');
 }
 
 let jumpToLastPage = () => {
-    return axios.get('/jump-to-last-page');
+    return axios.post('/jump-to-last-page');
 }
 
 let moveToNextTerm = () => {
-    return axios.get('/move-to-next-term');
+    return axios.post('/move-to-next-term');
 }
 
 let moveToPreviousTerm = () => {
-    return axios.get('/move-to-previous-term');
+    return axios.post('/move-to-previous-term');
 }
 
 let jumpToFirstTerm = () => {
-    return axios.get('/jump-to-first-term');
+    return axios.post('/jump-to-first-term');
 }
 
 let jumpToLastTerm = () => {
-    return axios.get('/jump-to-last-term');
+    return axios.post('/jump-to-last-term');
 }
 
 module.exports = {
