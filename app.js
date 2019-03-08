@@ -3,6 +3,7 @@ let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
+let cache = require('express-redis-cache')();
 
 let indexRouter = require('./routes/index');
 let dictionaryRouter = require('./routes/dictionary');
@@ -48,5 +49,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+global.cache = cache;
 
 module.exports = app;

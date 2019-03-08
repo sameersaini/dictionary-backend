@@ -12,7 +12,7 @@ const searchFromStart = async (res, requiredWord) => {
     let firstPageTermDefinition = firstPageResp.data.currentTermDefinition;
 
     if(requiredWord === firstPageTerm) {
-        // ToDo: add to cache
+        cache.add(requiredWord, firstPageTermDefinition, {}, () => {});
         return createResp(res, requiredWord, firstPageTermDefinition);
     }
 
@@ -32,7 +32,7 @@ const searchFromEnd = async (res, requiredWord) => {
     let lastPageTermIndex = lastPageResp.data.currentTermIndex
 
     if(requiredWord === lastPageTerm) {
-        // ToDo: add to cache
+        cache.add(requiredWord, lastPageTermDefinition, {}, () => {});
         return createResp(res, requiredWord, lastPageTermDefinition);
     }
 
@@ -68,7 +68,7 @@ const searchRight = async (res, requiredWord) => {
         console.log("moved to page" + nextPageIndex);
         // check if word on the next page matches with the requiredWord
         if(requiredWord === nextPageTerm) {
-            // ToDo: add to cache
+            cache.add(requiredWord, nextPageTermDefinition, {}, () => {});
             return createResp(res, requiredWord, nextPageTermDefinition)
         }
 
@@ -83,7 +83,12 @@ const searchRight = async (res, requiredWord) => {
                 let previousTermDefinition = previousTermResp.data.currentTermDefinition;
                 console.log("term index is " + previousTermIndex);
                 if(requiredWord === previousTerm) {
+                    cache.add(requiredWord, previousTermDefinition, {}, () => {});
                     return createResp(res, requiredWord, previousTermDefinition)
+                }
+
+                if(requiredWord > previousTerm) {
+                    return createResp(res, requiredWord, "Not Found");
                 }
                 // reached start of the page. requiredWord can be on the previous page
                 if(tempIndex === previousTermIndex) {
@@ -95,6 +100,7 @@ const searchRight = async (res, requiredWord) => {
                     let lastTermDefinition = lastTermResp.data.currentTermDefinition;
 
                     if(requiredWord === lastTerm) {
+                        cache.add(requiredWord, lastTermDefinition, {}, () => {});
                         return createResp(res, requiredWord, lastTermDefinition)
                     }
 
@@ -105,7 +111,12 @@ const searchRight = async (res, requiredWord) => {
                         let previousTermDefinition = previousTermResp.data.currentTermDefinition;
                         console.log("previous page index is " + previousTermIndex);
                         if(requiredWord === previousTerm) {
+                            cache.add(requiredWord, previousTermDefinition, {}, () => {});
                             return createResp(res, requiredWord, previousTermDefinition)
+                        }
+
+                        if(requiredWord > previousTerm) {
+                            return createResp(res, requiredWord, "Not Found");
                         }
 
                         if(previousTermIndex === previousPageFirstIndex) {
@@ -143,7 +154,7 @@ const searchLeft = async (res, requiredWord) => {
         console.log("moved to page " + previousPageIndex);
         // check if word on the previous page matches with the requiredWord
         if(requiredWord === previousPageTerm) {
-            // ToDo: add to cache
+            cache.add(requiredWord, previousPageTermDefinition, {}, () => {});
             return createResp(res, requiredWord, previousPageTermDefinition)
         }
         console.log("requiredWord " + requiredWord);
@@ -161,7 +172,12 @@ const searchLeft = async (res, requiredWord) => {
                 console.log("moved to page index " + nextTermIndex);
 
                 if(requiredWord === nextTerm) {
+                    cache.add(requiredWord, nextTermDefinition, {}, () => {});
                     return createResp(res, requiredWord, nextTermDefinition)
+                }
+
+                if(requiredWord < nextTerm) {
+                    return createResp(res, requiredWord, "Not Found");
                 }
                 // reached end of the page. requiredWord can be on the next page
                 if(tempIndex === nextTermIndex) {
@@ -172,7 +188,9 @@ const searchLeft = async (res, requiredWord) => {
                     let firstTerm = firstTermResp.data.currentTerm;
                     let firstTermDefinition = firstTermResp.data.currentTermDefinition;
                     console.log("moved to next page")
+
                     if(requiredWord === firstTerm) {
+                        cache.add(requiredWord, firstTermDefinition, {}, () => {});
                         return createResp(res, requiredWord, firstTermDefinition)
                     }
 
@@ -183,7 +201,12 @@ const searchLeft = async (res, requiredWord) => {
                         let nextTermDefinition = nextTermResp.data.currentTermDefinition;
                         console.log("moved to page index " + nextTermIndex);
                         if(requiredWord === nextTerm) {
+                            cache.add(requiredWord, nextTermDefinition, {}, () => {});
                             return createResp(res, requiredWord, nextTermDefinition)
+                        }
+
+                        if(requiredWord < nextTerm) {
+                            return createResp(res, requiredWord, "Not Found");
                         }
 
                         if(nextTermIndex === nextPageLastTermIndex) {
@@ -215,6 +238,7 @@ const searchFirstPageBackward = async (res, requiredWord) => {
         console.log("moved to page index " + previousTermIndex);
 
         if(requiredWord === previousTerm) {
+            cache.add(requiredWord, previousTermDefinition, {}, () => {});
             return createResp(res, requiredWord, previousTermDefinition)
         }
         // reached start but requiredWord not found
@@ -232,6 +256,7 @@ const searchLastPageForward = async (res, requiredWord, previousTermIndex) => {
         let nextTermDefinition = nextTermResp.data.currentTermDefinition;
 
         if(requiredWord === nextTerm) {
+            cache.add(requiredWord, nextTermDefinition, {}, () => {});
             return createResp(res, requiredWord, nextTermDefinition)
         }
         // reached end but requiredWord not found

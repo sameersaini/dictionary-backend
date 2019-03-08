@@ -7,11 +7,16 @@ let {searchFromStart, searchFromEnd, searchFromCurrentCursor,
 
 let findWord = async (req, res, next) => {
     const requiredWord = req.query.word;
+    const definition = await fetchFromRedis(requiredWord);
+    if(definition !== '') {
+        return createResp(res, requiredWord, definition)
+    }
+
     let currentPage = await status();
     let {currentTerm, currentTermDefinition} = currentPage.data;
-
     if(currentTerm === requiredWord) {
-        // ToDo: add to cache
+        console.log(currentTermDefinition);
+        cache.add(requiredWord, currentTermDefinition, {}, () => {});
         return createResp(res, requiredWord, currentTermDefinition)
     }
 
@@ -29,6 +34,19 @@ let findWord = async (req, res, next) => {
     else {
         await searchFromEnd(res, requiredWord, currentTerm);
     }
+}
+
+const fetchFromRedis = async (word) => {
+    return new Promise((resolve, reject) => {
+        cache.get(word, (error, entries) => {
+            if(entries && Array.isArray(entries) && entries.length >= 1) {
+                resolve(entries[0].body);
+            }
+            else {
+                resolve('');
+            }
+        })
+    })
 }
 
 module.exports = {findWord}
