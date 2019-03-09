@@ -88,7 +88,7 @@ const searchRight = async (res, requiredWord) => {
                 }
 
                 if(requiredWord > previousTerm) {
-                    return createResp(res, requiredWord, "Not Found");
+                    return createResp(res, requiredWord, "Not Present");
                 }
                 // reached start of the page. requiredWord can be on the previous page
                 if(tempIndex === previousTermIndex) {
@@ -116,11 +116,11 @@ const searchRight = async (res, requiredWord) => {
                         }
 
                         if(requiredWord > previousTerm) {
-                            return createResp(res, requiredWord, "Not Found");
+                            return createResp(res, requiredWord, "Not Present");
                         }
 
                         if(previousTermIndex === previousPageFirstIndex) {
-                            return createResp(res, requiredWord, "Not Found")
+                            return createResp(res, requiredWord, "Not Present")
                         }
                     }
                 }
@@ -177,7 +177,7 @@ const searchLeft = async (res, requiredWord) => {
                 }
 
                 if(requiredWord < nextTerm) {
-                    return createResp(res, requiredWord, "Not Found");
+                    return createResp(res, requiredWord, "Not Present");
                 }
                 // reached end of the page. requiredWord can be on the next page
                 if(tempIndex === nextTermIndex) {
@@ -206,11 +206,11 @@ const searchLeft = async (res, requiredWord) => {
                         }
 
                         if(requiredWord < nextTerm) {
-                            return createResp(res, requiredWord, "Not Found");
+                            return createResp(res, requiredWord, "Not Present");
                         }
 
                         if(nextTermIndex === nextPageLastTermIndex) {
-                            return createResp(res, requiredWord, "Not Found")
+                            return createResp(res, requiredWord, "Not Present")
                         }
                     }
                 }
@@ -241,9 +241,9 @@ const searchFirstPageBackward = async (res, requiredWord) => {
             cache.add(requiredWord, previousTermDefinition, {}, () => {});
             return createResp(res, requiredWord, previousTermDefinition)
         }
-        // reached start but requiredWord not found
+        // reached start but requiredWord not Present
         if(previousTermIndex === 0) {
-            return createResp(res, requiredWord, "Not Found")
+            return createResp(res, requiredWord, "Not Present")
         }
     }
 }
@@ -259,9 +259,9 @@ const searchLastPageForward = async (res, requiredWord, previousTermIndex) => {
             cache.add(requiredWord, nextTermDefinition, {}, () => {});
             return createResp(res, requiredWord, nextTermDefinition)
         }
-        // reached end but requiredWord not found
+        // reached end but requiredWord not Present
         if(previousTermIndex === nextTermIndex) {
-            return createResp(res, requiredWord, "Not Found")
+            return createResp(res, requiredWord, "Not Present")
         }
         previousTermIndex = nextTermIndex;
     }

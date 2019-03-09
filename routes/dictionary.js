@@ -4,6 +4,6 @@ let dictionaryController = require('../controllers/dictionary')
 
 
 /* GET users listing. */
-router.get('/find', dictionaryController.findWord);
+router.get('/', dictionaryController.findWord);
 
 module.exports = router;
