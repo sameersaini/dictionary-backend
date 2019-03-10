@@ -5,7 +5,6 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let cache = require('express-redis-cache')();
 
-let indexRouter = require('./routes/index');
 let dictionaryRouter = require('./routes/dictionary');
 
 let app = express();
@@ -27,7 +26,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/find', dictionaryRouter);
 
 // catch 404 and forward to error handler
