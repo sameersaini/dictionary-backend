@@ -15,7 +15,6 @@ let findWord = async (req, res, next) => {
     let currentPage = await status();
     let {currentTerm, currentTermDefinition} = currentPage.data;
     if(currentTerm === requiredWord) {
-        console.log(currentTermDefinition);
         cache.add(requiredWord, currentTermDefinition, {}, () => {});
         return createResp(res, requiredWord, currentTermDefinition)
     }

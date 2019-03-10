@@ -6,7 +6,6 @@ let {status, moveToNextPage, moveToPreviousPage, jumpToFirstPage,
 
 
 const searchFromStart = async (res, requiredWord) => {
-    console.log("from first Page")
     let firstPageResp = await jumpToFirstPage();
     let firstPageTerm = firstPageResp.data.currentTerm;
     let firstPageTermDefinition = firstPageResp.data.currentTermDefinition;
@@ -25,7 +24,6 @@ const searchFromStart = async (res, requiredWord) => {
 }
 
 const searchFromEnd = async (res, requiredWord) => {
-    console.log("from last Page")
     let lastPageResp = await jumpToLastPage();
     let lastPageTerm = lastPageResp.data.currentTerm;
     let lastPageTermDefinition = lastPageResp.data.currentTermDefinition;
@@ -53,10 +51,8 @@ const searchFromCurrentCursor = async (res, requiredWord, currentTerm) => {
 }
 
 const searchRight = async (res, requiredWord) => {
-    console.log("to right")
     let startPage = await status();
     let startPageIndex = startPage.data.currentPageIndex;
-    console.log("start page is " + startPageIndex);
     while(true) {
         // go to the next page
         let nextPageResp = await moveToNextPage();
@@ -65,7 +61,6 @@ const searchRight = async (res, requiredWord) => {
         let nextPageTermIndex = nextPageResp.data.currentTermIndex
         let nextPageIndex = nextPageResp.data.currentPageIndex;
 
-        console.log("moved to page" + nextPageIndex);
         // check if word on the next page matches with the requiredWord
         if(requiredWord === nextPageTerm) {
             cache.add(requiredWord, nextPageTermDefinition, {}, () => {});
@@ -81,7 +76,6 @@ const searchRight = async (res, requiredWord) => {
                 let previousTerm = previousTermResp.data.currentTerm;
                 let previousTermIndex = previousTermResp.data.currentTermIndex;
                 let previousTermDefinition = previousTermResp.data.currentTermDefinition;
-                console.log("term index is " + previousTermIndex);
                 if(requiredWord === previousTerm) {
                     cache.add(requiredWord, previousTermDefinition, {}, () => {});
                     return createResp(res, requiredWord, previousTermDefinition)
@@ -109,7 +103,6 @@ const searchRight = async (res, requiredWord) => {
                         let previousTerm = previousTermResp.data.currentTerm;
                         let previousTermIndex = previousTermResp.data.currentTermIndex;
                         let previousTermDefinition = previousTermResp.data.currentTermDefinition;
-                        console.log("previous page index is " + previousTermIndex);
                         if(requiredWord === previousTerm) {
                             cache.add(requiredWord, previousTermDefinition, {}, () => {});
                             return createResp(res, requiredWord, previousTermDefinition)
@@ -130,7 +123,6 @@ const searchRight = async (res, requiredWord) => {
         // case when we have reached the last page
         if(startPageIndex === nextPageIndex) {
             // move word by word forward till end of page
-            console.log("reached last page");
             await searchLastPageForward(res, requiredWord, nextPageTermIndex);
             return;
         }
@@ -139,10 +131,8 @@ const searchRight = async (res, requiredWord) => {
 }
 
 const searchLeft = async (res, requiredWord) => {
-    console.log("to left")
     let startPage = await status();
     let startPageIndex = startPage.data.currentPageIndex;
-    console.log("start page is " + startPageIndex);
     while(true) {
         // go to the previous page
         let previousPageResp = await moveToPreviousPage();
@@ -151,14 +141,11 @@ const searchLeft = async (res, requiredWord) => {
         let previousPageTermIndex = previousPageResp.data.currentTermIndex
         let previousPageIndex = previousPageResp.data.currentPageIndex;
 
-        console.log("moved to page " + previousPageIndex);
         // check if word on the previous page matches with the requiredWord
         if(requiredWord === previousPageTerm) {
             cache.add(requiredWord, previousPageTermDefinition, {}, () => {});
             return createResp(res, requiredWord, previousPageTermDefinition)
         }
-        console.log("requiredWord " + requiredWord);
-        console.log("previousPageTerm " + previousPageTerm);
 
         if(previousPageTerm < requiredWord) {
             // move one forward one word by word
@@ -168,8 +155,6 @@ const searchLeft = async (res, requiredWord) => {
                 let nextTerm = nextTermResp.data.currentTerm;
                 let nextTermIndex = nextTermResp.data.currentTermIndex;
                 let nextTermDefinition = nextTermResp.data.currentTermDefinition;
-
-                console.log("moved to page index " + nextTermIndex);
 
                 if(requiredWord === nextTerm) {
                     cache.add(requiredWord, nextTermDefinition, {}, () => {});
@@ -187,7 +172,6 @@ const searchLeft = async (res, requiredWord) => {
                     let firstTermResp = await jumpToFirstTerm();
                     let firstTerm = firstTermResp.data.currentTerm;
                     let firstTermDefinition = firstTermResp.data.currentTermDefinition;
-                    console.log("moved to next page")
 
                     if(requiredWord === firstTerm) {
                         cache.add(requiredWord, firstTermDefinition, {}, () => {});
@@ -199,7 +183,6 @@ const searchLeft = async (res, requiredWord) => {
                         let nextTerm = nextTermResp.data.currentTerm;
                         let nextTermIndex = nextTermResp.data.currentTermIndex;
                         let nextTermDefinition = nextTermResp.data.currentTermDefinition;
-                        console.log("moved to page index " + nextTermIndex);
                         if(requiredWord === nextTerm) {
                             cache.add(requiredWord, nextTermDefinition, {}, () => {});
                             return createResp(res, requiredWord, nextTermDefinition)
@@ -221,7 +204,6 @@ const searchLeft = async (res, requiredWord) => {
         // case when we have reached the first page
         if(previousPageIndex === 0) {
             // move word by word backward till end of page
-            console.log("reached first page");
             await searchFirstPageBackward(res, requiredWord);
             return;
         }
@@ -229,13 +211,11 @@ const searchLeft = async (res, requiredWord) => {
 }
 
 const searchFirstPageBackward = async (res, requiredWord) => {
-    console.log("searching first page backwards");
     while(true) {
         let previousTermResp = await moveToPreviousTerm();
         let previousTerm = previousTermResp.data.currentTerm;
         let previousTermIndex = previousTermResp.data.currentTermIndex;
         let previousTermDefinition = previousTermResp.data.currentTermDefinition;
-        console.log("moved to page index " + previousTermIndex);
 
         if(requiredWord === previousTerm) {
             cache.add(requiredWord, previousTermDefinition, {}, () => {});

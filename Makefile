@@ -1,5 +1,5 @@
 local:
-	npm start > stdout.txt 2> stderr.txt &
+	npm start
 
 local-watch:
 	node_modules/.bin/nodemon
